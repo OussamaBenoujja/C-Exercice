@@ -15,8 +15,9 @@ int main(){
     scanf("\n");
     scanf("%f",&c);
 
+
+    float finalres = ((a*2)+(b*3)+(c*5)) / 2+3+5;
     printf("**************************************\n");
-    printf("\n1ere moy : %.2f", (a/100) * 2);
-    printf("\n2eme moy : %.2f", (b/100) * 3);
-    printf("\n3eme moy : %.2f", (c/100) * 5);
+    printf("%.2f", finalres);
+
 }
