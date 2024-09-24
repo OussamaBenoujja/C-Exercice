@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main(){
-    int age = 22;
+    int age;
     char name[99];
     char lastName[99];
     char email[99];
