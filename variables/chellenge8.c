@@ -21,7 +21,6 @@ int main(){
     float y1 = 1;
     float y2 = 3;
     float y = y1/y2;
-    printf("%.2f",y);
     float moyG = powf(x,y);
     printf("\nMoyenne geometrique :%.2f ", moyG);
 
