@@ -85,7 +85,10 @@ int main(){
                 for (int i = 0; i < count; i++) {
                     if (strcmp(titles[i], rchstring) == 0) {
                         printf("\nEntrez novelle Quantity :");
-                        scanf("%d", &quantities[i]);
+                        while (scanf("%d", &quantities[i])!= 1){
+                            printf("\nError entrez un nomber ");
+                            getchar();
+                        }
                         found0 = true;
                     }
                 }
