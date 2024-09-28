@@ -15,6 +15,7 @@ int main(){
         int choice;
         char rchstring[max];
         bool isNum;
+        bool isNum1;
         bool quit = false;
 
         while(true){
@@ -28,22 +29,30 @@ int main(){
         printf("7. Quitter\n");
         printf("Choisissez une option : ");
         scanf("\n");
-        scanf("%d", &choice);
+        while (scanf("%d", &choice)!= 1){
+                    printf("Choisissez une option : ");
+                    getchar();
+                }
 
         switch (choice){
         case 1:
                 printf("\nentrez nom de livre : ");
                 scanf("\n");
-                fgets(titles[count], max, stdin);
+                fgets(titles[count], sizeof(titles[count]), stdin);
                 printf("\nentrez nom de author : ");
                 scanf("\n");
                 fgets(authors[count], max, stdin);
                 printf("\nentrez prix : ");
                 scanf("\n");
-                isNum = scanf("%f", &prices[count]);
-                printf("\nentrez quantity : ");
-                scanf("\n");
-                isNum = scanf("%d", &quantities[count]);
+                
+                while (scanf("%f", &prices[count])!= 1){
+                    printf("\nError entrez un nomber");
+                    getchar();
+                }
+                while (scanf("%d", &quantities[count]!= 1){
+                    printf("\nError entrez un nomber");
+                    getchar();
+                }
                 count++;
                 break;
         case 2:
