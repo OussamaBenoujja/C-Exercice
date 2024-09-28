@@ -36,6 +36,7 @@ int main(){
 
         switch (choice){
         case 1:
+                if(count<max){
                 printf("\nentrez nom de livre : ");
                 scanf("\n");
                 fgets(titles[count], sizeof(titles[count]), stdin);
@@ -55,7 +56,7 @@ int main(){
                     printf("\nError entrez un nomber ");
                     getchar();
                 }
-                count++;
+                count++;}else{printf("\nle nombre des livre est maximum!!");}
                 break;
         case 2:
             for(int i=0;i<count;i++){
