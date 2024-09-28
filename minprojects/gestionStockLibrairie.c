@@ -30,7 +30,7 @@ int main(){
         printf("Choisissez une option : ");
         scanf("\n");
         while (scanf("%d", &choice)!= 1){
-                    printf("Choisissez une option : ");
+                    printf("\nChoisissez une option : ");
                     getchar();
                 }
 
@@ -46,11 +46,13 @@ int main(){
                 scanf("\n");
                 
                 while (scanf("%f", &prices[count])!= 1){
-                    printf("\nError entrez un nomber");
+                    printf("\nError entrez un nomber ");
                     getchar();
                 }
-                while (scanf("%d", &quantities[count]!= 1){
-                    printf("\nError entrez un nomber");
+                printf("\nentrez quantity : ");
+                scanf("\n");
+                while (scanf("%d", &quantities[count])!= 1){
+                    printf("\nError entrez un nomber ");
                     getchar();
                 }
                 count++;
@@ -117,11 +119,9 @@ int main(){
             printf("\nnombre de livre est %d",count);
             break;
         case 7:
-            quit =true;
+            quit = true;
             break;
         }
-        if(quit){
-            break;
-        }
+        if(quit){break;}
         }
 }
