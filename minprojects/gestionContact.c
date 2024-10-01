@@ -176,6 +176,13 @@ void search(contact c[MAX], char name[MAX]) {
 
 int main() {
     while (choix != 6) {
+        printf("          ____________  \n");
+        printf("        /   ,,____,,   \\:.  \n");
+        printf("       |__| [][][] |__|:  :  \n");
+        printf(" Gestion /  [][][]  \\   :  :  \n");
+        printf("Contacts/   [][][]   \\   :  :  \n");
+        printf("       /    [][][]    \\   ..  \n");
+        printf(" =====|________________| \n");
         printf("\n************************************************************************");
         printf("\n\t1. Ajouter un Contact. ");
         printf("\n\t2. Modifier un Contact. ");
