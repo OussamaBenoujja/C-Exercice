@@ -184,7 +184,11 @@ int main() {
         printf("\n\t5. Rechercher un Contact. ");
         printf("\n\t6. Quitter. ");
         printf("\n\t   Entrez un Choix: ");
-        scanf("%d", &choix);
+        while(scanf("%d", &choix)!=1){
+            printf("\n\t   Entrez un Choix: ");
+            getchar();
+        }
+
         
         switch (choix) {
             case 1:
