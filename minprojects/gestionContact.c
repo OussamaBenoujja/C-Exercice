@@ -120,6 +120,7 @@ void update(contact c[MAX], char name[MAX]) {
                 }
                 scanf("%s", c[i].email);
             }
+           
             break;
         }
     }
@@ -163,8 +164,8 @@ void search(contact c[MAX], char name[MAX]) {
             found = true;
             printf("\n------------------------------------");
             printf("\n\tnom: %s", c[i].nom);
-            printf("\tnom: %s", c[i].tel);
-            printf("\n\tnom: %s", c[i].email);
+            printf("\tnombre: %s", c[i].tel);
+            printf("\n\temail: %s", c[i].email);
             printf("\n------------------------------------");
             break;
         }
@@ -191,8 +192,10 @@ int main() {
         printf("\n\t5. Rechercher un Contact. ");
         printf("\n\t6. Quitter. ");
         printf("\n\t   Entrez un Choix: ");
+        printf("\n\t:-");
         while(scanf("%d", &choix)!=1){
             printf("\n\t   Entrez un Choix: ");
+            printf("\n\t:-");
             getchar();
         }
 
