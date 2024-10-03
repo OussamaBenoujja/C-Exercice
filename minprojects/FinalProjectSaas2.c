@@ -27,7 +27,7 @@ res _res[max] =  {
     {"Hassan", "Mouad", "0656789012", 35, 4, "07-10-2024", 5},
     {"Amina", "Bennani", "0667890123", 26, 1, "09-10-2024", 6},
     {"Omar", "Jamal", "0678901234", 31, 1, "24-10-2024", 7},
-    {"Nadia", "Fahmi", "0689012345", 29, 3, "01-10-2024", 8},
+    {"Nadia", "Fahmi", "0689012345", 45, 3, "01-10-2024", 8},
     {"Khalid", "Amrani", "0690123456", 24, 4, "24-10-2024", 9},
     {"Leila", "Safi", "0701234567", 27, 2, "14-10-2024", 10}
 };
@@ -70,15 +70,15 @@ void delete(int id){
     bool found = false;
     for(int i = 0;i<max;i++){
         if(id==_res[i].id){
-            strcpy(_res[i].name , _res[i+1].name);
-            strcpy(_res[i].lastName , _res[i+1].lastName);
-            strcpy(_res[i].tel , _res[i+1].tel);
-            strcpy(_res[i].date , _res[i+1].date);
-            _res[i].age = _res[i+1].age;
-            _res[i].status = _res[i+1].status;
-            found = true;
-            printf("\nDelete Succesful!!!");
-        }
+        for(int j = i;j<count;j++){
+            strcpy(_res[j].name , _res[j+1].name);
+            strcpy(_res[j].lastName , _res[j+1].lastName);
+            strcpy(_res[j].tel , _res[j+1].tel);
+            strcpy(_res[j].date , _res[j+1].date);
+            _res[j].age = _res[j+1].age;
+            _res[j].status = _res[j+1].status;
+            _res[j].id = _res[j+1].id;
+        }found = true;count--;printf("\nDelete Succesful!!!");}
     }if(!found){printf("\nNo reservation associated with This ID.");}
 }
 void modify(int id){
@@ -259,12 +259,19 @@ void del(){
 }
 
 void display(){
+        char phrase[max];
         if (count > 0) {
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
         printf("\n--------------------------------------------------------------------------------------------------------------");
         for(int i = 0; i < count; i++) {
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            if(_res[i].status == 1){strcpy(phrase,"validated");}
+            else if(_res[i].status == 2){strcpy(phrase,"postponed");}
+            else if(_res[i].status == 3){strcpy(phrase,"canceled");}
+            else if(_res[i].status == 4){strcpy(phrase,"processed");}
+
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age,
+             phrase, _res[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
         }
     } else {
@@ -318,83 +325,64 @@ void sortbyDate(){
 
     res str[max];
     res s;
-    for(int i = 0;i<max;i++){
+    
+    for(int i = 0; i < max; i++) {
         str[i] = _res[i];
     }
-    bool isOlder=false;
-
-    char _day[2];
-    char _month[2];
-    char _year[4];
     
-    char __day[2];
-    char __month[2];
-    char __year[4];
+    int day, month, year;
+    int day_, month_, year_;
+    
+    bool isOlder = false;
 
-    int day;
-    int month;
-    int year;
-    int day_;
-    int month_;
-    int year_;
-    for(int i=0;i<count;i++){
-      for(int j=i+1;j<count;j++){    
-                __day[0] = str[j].date[0];
-                __day[1] = str[j].date[1];
-                __month[3] = str[j].date[3];
-                __month[4] = str[j].date[4];
-                __year[6] = str[j].date[6];
-                __year[7] = str[j].date[7];
-                __year[8] = str[j].date[8];
-                __year[9] = str[j].date[9];
+    for(int i = 0; i < count; i++) {
+        for (int j = i + 1; j < count; j++) {
+            
+            char __day[3], __month[3], __year[5];
+            
+            strncpy(__day, str[j].date, 2);
+            strncpy(__month, str[j].date + 3, 2);
+            strncpy(__year, str[j].date + 6, 4);
 
-                day_ = atoi(__day);
-                month_ = atoi(__month);
-                year_ = atoi(__year);
+            day_ = atoi(__day);
+            month_ = atoi(__month);
+            year_ = atoi(__year);
 
-                _day[0] = str[i].date[0];
-                _day[1] = str[i].date[1];
-                _month[3] = str[i].date[3];
-                _month[4] = str[i].date[4];
-                _year[6] = str[i].date[6];
-                _year[7] = str[i].date[7];
-                _year[8] = str[i].date[8];
-                _year[9] = str[i].date[9];
+            char _day[3], _month[3], _year[5];
+            strncpy(_day, str[i].date, 2);
+            strncpy(_month, str[i].date + 3, 2);
+            strncpy(_year, str[i].date + 6, 4);
 
-                day = atoi(_day);
-                month = atoi(_month);
-                year = atoi(_year);
 
-                if((year - year_)<0){isOlder=true;}
-                else if((month - month_)<0){isOlder=true;}
-                else if((day - day_)<0){isOlder=true;}
-                else{isOlder=false;}
-                
+            day = atoi(_day);
+            month = atoi(_month);
+            year = atoi(_year);
 
-                if(isOlder){
-            strcpy(s.lastName,str[i].lastName);
-            strcpy(str[i].lastName,str[j].lastName);
-            strcpy(str[j].lastName,s.lastName);
-            strcpy(s.name,str[i].name);
-            strcpy(str[i].name,str[j].name);
-            strcpy(str[j].name,s.name);
-            strcpy(s.tel,str[i].tel);
-            strcpy(str[i].tel , str[j].tel);
-            strcpy(str[j].tel , s.tel);
-            strcpy(s.date,str[i].date);
-            strcpy(str[i].date , str[j].date);
-            strcpy(str[j].date , s.date);
-            s.age = str[i].age;
-            str[i].age = str[j].age;
-            str[j].age = s.age;
-            s.age = str[i].age;
-            str[i].status = str[j].status;
-            str[j].status = s.status;
-            s.id = str[i].id;
-            str[i].id = str[j].id;
-            str[j].id = s.id;
-         }
-      }}
+            
+            if (year > year_) {
+                isOlder = true;
+            } else if (year == year_) {
+                if (month > month_) {
+                    isOlder = true;
+                } else if (month == month_) {
+                    if (day > day_) {
+                        isOlder = true;
+                    } else {
+                        isOlder = false;
+                    }
+                } else {
+                    isOlder = false;
+                }
+            } else {
+                isOlder = false;
+            }
+            if (isOlder) {
+                s = str[i];
+                str[i] = str[j];
+                str[j] = s;
+            }
+        }
+    }
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
         printf("\n--------------------------------------------------------------------------------------------------------------");
@@ -621,7 +609,30 @@ void search(){
             break;
     }
 }
+void stats(){
+    int avgAge =0, teen=0, adult=0, old=0, vali=0, annul=0, trai=0, repo=0;
+    for(int i = 0;i<count;i++){
+        avgAge += _res[i].age;
+        if(_res[i].age<=18){teen++;}
+        if(_res[i].age>18&&_res[i].age<=35){adult++;}
+        if(_res[i].age>35){old++;}
+        if(_res[i].status == 1){vali++;}
+        if(_res[i].status == 2){repo++;}
+        if(_res[i].status == 3){annul++;}
+        if(_res[i].status == 4){trai++;}
+    }
+    printf("\nAvg Age is : %d",avgAge/count);
+    printf("\nTeenagers under 18 are : %d", teen);
+    printf("\nAdults above 18 and under 35 are : %d", adult);
+    printf("\nAdults above 35 : %d", old);
+    
+    printf("\nNumber of Validated Reservation: %d", vali);
+    printf("\nNumber of PostPoned Reservation: %d", repo);
+    printf("\nNumber of Canceled Reservation: %d", annul);
+    printf("\nNumber of Processed Reservation: %d\n", trai);
 
+
+}
 
 int main(){
     
@@ -657,8 +668,8 @@ int main(){
             search();
             break;
         case 6:
+            stats();
             break;
-
     }
 
     
