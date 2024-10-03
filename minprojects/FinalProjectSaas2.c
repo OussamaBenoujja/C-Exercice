@@ -21,7 +21,7 @@ typedef struct reservation{
 
 res _res[max] =  {
     {"Ahmed", "Benali", "0612345678", 30, 4, "30-10-2024", 1},
-    {"Fatima", "Zahra", "0623456789", 25, 1, "15-10-2024", 2},
+    {"Fatima", "Zahra", "0623456789", 25, 4, "15-10-2024", 2},
     {"Youssef", "Idrissi", "0634567890", 22, 3, "10-10-2024", 3},
     {"Sara", "Lahlou", "0645678901", 28, 1, "03-10-2024", 4},
     {"Hassan", "Mouad", "0656789012", 35, 4, "07-10-2024", 5},
@@ -65,7 +65,6 @@ void verifyDate(char phrase[11]){
     phrase[9] = (year % 10) + '0';       
     phrase[10] = '\0';    
 }
-
 void delete(int id){
     bool found = false;
     for(int i = 0;i<max;i++){
@@ -172,10 +171,8 @@ void modify(int id){
         }
     }if(!found){printf("\nNo reservation associated with This ID.");}
 }
-
-
 void add(){
-char ch;
+    char ch;
 
     printf("\nEnter First Name: ");
     if (scanf("%49s", _res[count].name) == 1) {
@@ -228,16 +225,22 @@ char ch;
         }
     }
     printf("\nEnter Age : ");
-    scanf(" %d", &_res[count].age);
-    while(_res[count].age<0 && _res[count].age>100){
+    if(scanf(" %d", &_res[count].age)!=1){
+        printf("\ninvalid Age!!!! Enter Age : ");
+        return;
+    }
+    if(_res[count].age<0 && _res[count].age>100){
             printf("\ninvalid Age!!!! Enter Age : ");
-            scanf(" %d", &_res[count].age);
+            return;
     }
     printf("\nEnter Status (1.valide, 2.reporte, 3.annule, 4.traite) : ");
-    scanf(" %d", &_res[count].status);
-    while(_res[count].status<1 && _res[count].status>4){
+    if(scanf(" %d", &_res[count].status)!=1){
             printf("\ninvalid Status!!!! Enter Status : ");
-            scanf(" %d", &_res[count].age);
+            return;
+    }
+    if(_res[count].status<1 && _res[count].status>4){
+            printf("\ninvalid Status!!!! Enter Status : ");
+            return;
     }
 
     verifyDate(_res[count].date);
@@ -247,7 +250,6 @@ char ch;
     _ID++;
     count++;
 }
-
 void del(){
     int refID;
     int _ch;
@@ -257,28 +259,26 @@ void del(){
     scanf(" %d", &_ch);
     if(_ch==1){modify(refID);}else if(_ch==2){delete(refID);}
 }
-
 void display(){
-        char phrase[max];
+        char phrase1[max];
         if (count > 0) {
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
         printf("\n--------------------------------------------------------------------------------------------------------------");
         for(int i = 0; i < count; i++) {
-            if(_res[i].status == 1){strcpy(phrase,"validated");}
-            else if(_res[i].status == 2){strcpy(phrase,"postponed");}
-            else if(_res[i].status == 3){strcpy(phrase,"canceled");}
-            else if(_res[i].status == 4){strcpy(phrase,"processed");}
+            if(_res[i].status == 1){strcpy(phrase1,"validated");}
+            else if(_res[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(_res[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(_res[i].status == 4){strcpy(phrase1,"processed");}
 
             printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age,
-             phrase, _res[i].date);
+             phrase1, _res[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
         }
     } else {
         printf("\n\tAucun Reservation!!!\n");
     }
 }
-
 void sortbyNamAZ(){
     res str[max];
     res s;
@@ -288,38 +288,26 @@ void sortbyNamAZ(){
     for(int i=0;i<count;i++){
       for(int j=i+1;j<count;j++){
          if(strcmp(str[i].lastName,str[j].lastName)>0){
-            strcpy(s.lastName,str[i].lastName);
-            strcpy(str[i].lastName,str[j].lastName);
-            strcpy(str[j].lastName,s.lastName);
-            strcpy(s.name,str[i].name);
-            strcpy(str[i].name,str[j].name);
-            strcpy(str[j].name,s.name);
-            strcpy(s.tel,str[i].tel);
-            strcpy(str[i].tel , str[j].tel);
-            strcpy(str[j].tel , s.tel);
-            strcpy(s.date,str[i].date);
-            strcpy(str[i].date , str[j].date);
-            strcpy(str[j].date , s.date);
-            s.age = str[i].age;
-            str[i].age = str[j].age;
-            str[j].age = s.age;
-            s.age = str[i].age;
-            str[i].status = str[j].status;
-            str[j].status = s.status;
-            s.id = str[i].id;
-            str[i].id = str[j].id;
-            str[j].id = s.id;
+            s = str[i];
+            str[i] = str[j];
+            str[j] = s;
          }
       }
    }
-    
+        char phrase1[max];
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
         printf("\n--------------------------------------------------------------------------------------------------------------");
         for(int i = 0; i < count; i++) {
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            if(str[i].status == 1){strcpy(phrase1,"validated");}
+            else if(str[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(str[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(str[i].status == 4){strcpy(phrase1,"processed");}
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age,
+             phrase1, str[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
         }
+
 }
 void sortbyDate(){
 
@@ -383,11 +371,17 @@ void sortbyDate(){
             }
         }
     }
+        char phrase1[max];
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
         printf("\n--------------------------------------------------------------------------------------------------------------");
         for(int i = 0; i < count; i++) {
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            if(str[i].status == 1){strcpy(phrase1,"validated");}
+            else if(str[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(str[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(str[i].status == 4){strcpy(phrase1,"processed");}
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age,
+             phrase1, str[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
         }
 }
@@ -400,100 +394,68 @@ void sortbyNamZA(){
     for(int i=0;i<count;i++){
       for(int j=i+1;j<count;j++){
          if(strcmp(str[i].lastName,str[j].lastName)<0){
-            strcpy(s.lastName,str[i].lastName);
-            strcpy(str[i].lastName,str[j].lastName);
-            strcpy(str[j].lastName,s.lastName);
-            strcpy(s.name,str[i].name);
-            strcpy(str[i].name,str[j].name);
-            strcpy(str[j].name,s.name);
-            strcpy(s.tel,str[i].tel);
-            strcpy(str[i].tel , str[j].tel);
-            strcpy(str[j].tel , s.tel);
-            strcpy(s.date,str[i].date);
-            strcpy(str[i].date , str[j].date);
-            strcpy(str[j].date , s.date);
-            s.age = str[i].age;
-            str[i].age = str[j].age;
-            str[j].age = s.age;
-            s.age = str[i].age;
-            str[i].status = str[j].status;
-            str[j].status = s.status;
-            s.id = str[i].id;
-            str[i].id = str[j].id;
-            str[j].id = s.id;
+            s = str[i];
+            str[i] = str[j];
+            str[j] = s;
          }
       }
    }
     
+        char phrase1[max];
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
         printf("\n--------------------------------------------------------------------------------------------------------------");
         for(int i = 0; i < count; i++) {
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            if(str[i].status == 1){strcpy(phrase1,"validated");}
+            else if(str[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(str[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(str[i].status == 4){strcpy(phrase1,"processed");}
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age,
+             phrase1, str[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
         }
 }
-
 void sortbyStatus(){
     res str[max];
     res s;
     int countx = 0;
-    for(int i = 0;i<max;i++){
+    for(int i = 0;i<count;i++){
         if(_res[i].status == 1){
-            strcpy(str[countx].lastName,_res[i].lastName);
-            strcpy(str[countx].name,_res[i].name);
-            strcpy(str[countx].tel,_res[i].tel);
-            strcpy(str[countx].date,_res[i].date);
-            str[countx].age = _res[i].age;
-            str[countx].status = _res[i].status;
-            str[countx].id = _res[i].id;
+            str[countx] = _res[i];
             countx++;
         }
     }
-    for(int i = 0;i<max;i++){
+    for(int i = 0;i<count;i++){
         if(_res[i].status == 2){
-            strcpy(str[countx].lastName,_res[i].lastName);
-            strcpy(str[countx].name,_res[i].name);
-            strcpy(str[countx].tel,_res[i].tel);
-            strcpy(str[countx].date,_res[i].date);
-            str[countx].age = _res[i].age;
-            str[countx].status = _res[i].status;
-            str[countx].id = _res[i].id;
+            str[countx] = _res[i];  
             countx++;
         }
-    }for(int i = 0;i<max;i++){
+    }for(int i = 0;i<count;i++){
         if(_res[i].status == 3){
-            strcpy(str[countx].lastName,_res[i].lastName);
-            strcpy(str[countx].name,_res[i].name);
-            strcpy(str[countx].tel,_res[i].tel);
-            strcpy(str[countx].date,_res[i].date);
-            str[countx].age = _res[i].age;
-            str[countx].status = _res[i].status;
-            str[countx].id = _res[i].id;
+            str[countx] = _res[i];
             countx++;
         }
-    }for(int i = 0;i<max;i++){
+    }for(int i = 0;i<count;i++){
         if(_res[i].status == 4){
-            strcpy(str[countx].lastName,_res[i].lastName);
-            strcpy(str[countx].name,_res[i].name);
-            strcpy(str[countx].tel,_res[i].tel);
-            strcpy(str[countx].date,_res[i].date);
-            str[countx].age = _res[i].age;
-            str[countx].status = _res[i].status;
-            str[countx].id = _res[i].id;
+            str[countx] = _res[i];
             countx++;
         }
     }
+        char phrase1[max];
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
         printf("\n--------------------------------------------------------------------------------------------------------------");
         for(int i = 0; i < count; i++) {
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            if(str[i].status == 1){strcpy(phrase1,"validated");}
+            else if(str[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(str[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(str[i].status == 4){strcpy(phrase1,"processed");}
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age,
+             phrase1, str[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
         }
 
 }
-
 void sort(){
     int choice;
     printf("\n1.Display with alphabtical order A-Z");
@@ -525,7 +487,6 @@ void sort(){
 
 
 }
-
 void searchByName(){
     char ch;
     char phrase[max];
@@ -545,11 +506,17 @@ void searchByName(){
         }
     }
     for(int i = 0;i<count;i++){
+        char phrase1[max];
         if(strcmp(_res[i].lastName, phrase)==0){
+            if(_res[i].status == 1){strcpy(phrase1,"validated");}
+            else if(_res[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(_res[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(_res[i].status == 4){strcpy(phrase1,"processed");}
             printf("\n--------------------------------------------------------------------------------------------------------------");
             printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
             printf("\n--------------------------------------------------------------------------------------------------------------");
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age,
+             phrase1, _res[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
             
         }
@@ -559,11 +526,17 @@ void searchByDate(){
     char phrase[max];
     verifyDate(phrase);
     for(int i = 0;i<count;i++){
+        char phrase1[max];
         if(strcmp(_res[i].date, phrase)==0){
+            if(_res[i].status == 1){strcpy(phrase1,"validated");}
+            else if(_res[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(_res[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(_res[i].status == 4){strcpy(phrase1,"processed");}
             printf("\n--------------------------------------------------------------------------------------------------------------");
             printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
             printf("\n--------------------------------------------------------------------------------------------------------------");
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age,
+             phrase1, _res[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
             
         }
@@ -578,11 +551,17 @@ void searchByID(){
         getchar();
     }
     for(int i = 0;i<count;i++){
+        char phrase1[max];
         if(_res[i].id==yu){
+            if(_res[i].status == 1){strcpy(phrase1,"validated");}
+            else if(_res[i].status == 2){strcpy(phrase1,"postponed");}
+            else if(_res[i].status == 3){strcpy(phrase1,"canceled");}
+            else if(_res[i].status == 4){strcpy(phrase1,"processed");}
             printf("\n--------------------------------------------------------------------------------------------------------------");
             printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
             printf("\n--------------------------------------------------------------------------------------------------------------");
-            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10s|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age,
+             phrase1, _res[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
             
         }
@@ -633,7 +612,6 @@ void stats(){
 
 
 }
-
 int main(){
     
     int choice;
@@ -671,7 +649,5 @@ int main(){
             stats();
             break;
     }
-
-    
     }
 }
