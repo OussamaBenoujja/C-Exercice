@@ -6,8 +6,8 @@
 
 #define max 100
 
-int count = 0;
-int _ID = 0;
+int count = 10;
+int _ID = 11;
 
 typedef struct reservation{
     char name[max];
@@ -15,11 +15,56 @@ typedef struct reservation{
     char tel[15];
     int age;
     int status;
-    char date[10];
+    char date[11];
     int id;
 }res;
 
-res _res[max];
+res _res[max] =  {
+    {"Ahmed", "Benali", "0612345678", 30, 4, "30-10-2024", 1},
+    {"Fatima", "Zahra", "0623456789", 25, 1, "15-10-2024", 2},
+    {"Youssef", "Idrissi", "0634567890", 22, 3, "10-10-2024", 3},
+    {"Sara", "Lahlou", "0645678901", 28, 1, "03-10-2024", 4},
+    {"Hassan", "Mouad", "0656789012", 35, 4, "07-10-2024", 5},
+    {"Amina", "Bennani", "0667890123", 26, 1, "09-10-2024", 6},
+    {"Omar", "Jamal", "0678901234", 31, 1, "24-10-2024", 7},
+    {"Nadia", "Fahmi", "0689012345", 29, 3, "01-10-2024", 8},
+    {"Khalid", "Amrani", "0690123456", 24, 4, "24-10-2024", 9},
+    {"Leila", "Safi", "0701234567", 27, 2, "14-10-2024", 10}
+};
+
+void verifyDate(char phrase[11]){
+    int day, month, year;
+    printf("\nEnter Date Of Reservation (dd-mm-yyyy): ");
+    if (scanf("%d-%d-%d", &day, &month, &year) != 3) {
+        printf("\nError: Invalid date.\n");
+        return;
+    }
+
+    if (month < 1 || month > 12 || day < 1 || day > 31) {
+        printf("\nError: Invalid date.\n");
+        return;
+    }
+    if ((month == 2 && day > 29) || (day == 29 && month == 2 && year % 4 != 0)) {
+        printf("\nError: Invalid date.\n");
+        return;
+    }
+    if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
+        printf("\nError: Invalid date.\n");
+        return;
+    }
+
+    phrase[0] = (day / 10) + '0';        
+    phrase[1] = (day % 10) + '0';        
+    phrase[2] = '-';                      
+    phrase[3] = (month / 10) + '0';      
+    phrase[4] = (month % 10) + '0';      
+    phrase[5] = '-';                      
+    phrase[6] = (year / 1000) + '0';     
+    phrase[7] = ((year / 100) % 10) + '0';
+    phrase[8] = ((year / 10) % 10) + '0'; 
+    phrase[9] = (year % 10) + '0';       
+    phrase[10] = '\0';    
+}
 
 void delete(int id){
     bool found = false;
@@ -46,17 +91,63 @@ void modify(int id){
                 scanf("%d",&choice);
                 switch (choice)
                 {
+                char ch;
                 case 1:
-                    printf("\nEnter First Name : ");
-                    scanf(" %s", _res[i].name);
+                    printf("\nEnter First Name: ");
+                    if (scanf("%49s", _res[i].name) == 1) {
+                        ch = getchar();
+                        if (ch == ' ' || ch != '\n') {
+                            printf("Error: Only one word is allowed for the first name.\n");
+                            while (ch != '\n' && ch != EOF) ch = getchar();
+                            return;  
+                        }
+                    }
+                    for (int j = 0; _res[i].name[j] != '\0'; i++) {
+                        if (!isalpha(_res[i].name[j])) {
+                            printf("\nError: Name can only be alphabetic characters.");
+                            return;
+                        }
+                    }
+
                     break;
                 case 2:
-                    printf("\nEnter Last  Name : ");
-                    scanf(" %s", _res[i].lastName);
+                    printf("\nEnter Last Name: ");
+                    if (scanf("%49s", _res[i].lastName) == 1) {
+                        ch = getchar();
+                        if (ch == ' ' || ch != '\n') {
+                            printf("Error: Only one word is allowed for the last name.\n");
+                            while (ch != '\n' && ch != EOF) ch = getchar();
+                            return;
+                        }
+                    }
+                    for (int j = 0; _res[i].lastName[j] != '\0'; i++) {
+                        if (!isalpha(_res[i].lastName[j])) {
+                            printf("\nError: Name can only be alphabetic characters.");
+                            return;
+                        }
+                    }
                     break;
                 case 3:
-                    printf("\nEnter Telephone Number : ");
-                    scanf(" %15s", _res[i].tel);
+                        printf("\nEnter Telephone Number : ");
+                        if ( scanf(" %15s", _res[i].tel) == 1) {
+                            ch = getchar();
+                            if (ch == ' ' || ch != '\n') {
+                                printf("Error: Only one Number is allowed for the Phone Number.\n");
+                                while (ch != '\n' && ch != EOF) ch = getchar();
+                                return;
+                            }
+                        }
+
+                        if (!isdigit(_res[i].tel[0]) && _res[i].tel[0] != '+') {
+                            printf("\nError: Phone number must numbers only");
+                            return;
+                        }
+                        for (int j = 1; _res[i].tel[j] != '\0'; j++) {
+                            if (!isdigit(_res[i].tel[j])) {
+                                printf("\nError: Phone number must numbers only");
+                                return;
+                            }
+                        }
                     break;
                 case 4:
                     printf("\nEnter Age : ");
@@ -67,8 +158,9 @@ void modify(int id){
                     scanf(" %d", &_res[i].status);
                     break;
                 case 6:
-                    printf("\nEnter Date Of Reservation (dd-mm-yyyy) : ");
-                    scanf(" %s", _res[count].date);
+                    verifyDate(_res[i].date);
+                    break;
+                case 7:
                     break;
                 default:
                     printf("\nInvalid Choice!!!");
@@ -81,19 +173,76 @@ void modify(int id){
     }if(!found){printf("\nNo reservation associated with This ID.");}
 }
 
+
 void add(){
-    printf("\nEnter First Name : ");
-    scanf(" %s", _res[count].name);
-    printf("\nEnter Last  Name : ");
-    scanf(" %s", _res[count].lastName);
+char ch;
+
+    printf("\nEnter First Name: ");
+    if (scanf("%49s", _res[count].name) == 1) {
+        ch = getchar();
+        if (ch == ' ' || ch != '\n') {
+            printf("Error: Only one word is allowed for the first name.\n");
+            while (ch != '\n' && ch != EOF) ch = getchar();
+            return;  
+        }
+    }
+    for (int i = 0; _res[count].name[i] != '\0'; i++) {
+        if (!isalpha(_res[count].name[i])) {
+            printf("\nError: Name can only be alphabetic characters.");
+            return;
+        }
+    }
+    printf("\nEnter Last Name: ");
+    if (scanf("%49s", _res[count].lastName) == 1) {
+        ch = getchar();
+        if (ch == ' ' || ch != '\n') {
+            printf("Error: Only one word is allowed for the last name.\n");
+            while (ch != '\n' && ch != EOF) ch = getchar();
+            return;
+        }
+    }
+    for (int i = 0; _res[count].lastName[i] != '\0'; i++) {
+        if (!isalpha(_res[count].lastName[i])) {
+            printf("\nError: Name can only be alphabetic characters.");
+            return;
+        }
+    }
     printf("\nEnter Telephone Number : ");
-    scanf(" %15s", _res[count].tel);
+    if ( scanf(" %15s", _res[count].tel) == 1) {
+        ch = getchar();
+        if (ch == ' ' || ch != '\n') {
+            printf("Error: Only one Number is allowed for the Phone Number.\n");
+            while (ch != '\n' && ch != EOF) ch = getchar();
+            return;
+        }
+    }
+
+    if (!isdigit(_res[count].tel[0]) && _res[count].tel[0] != '+') {
+        printf("\nError: Phone number must numbers only");
+        return;
+    }
+    for (int i = 1; _res[count].tel[i] != '\0'; i++) {
+        if (!isdigit(_res[count].tel[i])) {
+            printf("\nError: Phone number must numbers only");
+            return;
+        }
+    }
     printf("\nEnter Age : ");
     scanf(" %d", &_res[count].age);
-    printf("\nEnter Status (1.validé, 2.reporté, 3.annulé, 4.traité) : ");
+    while(_res[count].age<0 && _res[count].age>100){
+            printf("\ninvalid Age!!!! Enter Age : ");
+            scanf(" %d", &_res[count].age);
+    }
+    printf("\nEnter Status (1.valide, 2.reporte, 3.annule, 4.traite) : ");
     scanf(" %d", &_res[count].status);
-    printf("\nEnter Date Of Reservation (dd-mm-yyyy) : ");
-    scanf(" %s", _res[count].date);
+    while(_res[count].status<1 && _res[count].status>4){
+            printf("\ninvalid Status!!!! Enter Status : ");
+            scanf(" %d", &_res[count].age);
+    }
+
+    verifyDate(_res[count].date);
+               
+
     _res[count].id = _ID;
     _ID++;
     count++;
@@ -110,12 +259,12 @@ void del(){
 }
 
 void display(){
-    for(int i =0;i<count;i++)
         if (count > 0) {
         printf("\n--------------------------------------------------------------------------------------------------------------");
         printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+        printf("\n--------------------------------------------------------------------------------------------------------------");
         for(int i = 0; i < count; i++) {
-            printf("\n|%-10d|%-18s|%-21s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
             printf("\n-----------------------------------------------------------------------------------------------------------");
         }
     } else {
@@ -129,15 +278,232 @@ void sortbyNamAZ(){
     for(int i = 0;i<max;i++){
         str[i] = _res[i];
     }
-    for(int i=0;i<max;i++){
-      for(int j=i+1;j<max;j++){
+    for(int i=0;i<count;i++){
+      for(int j=i+1;j<count;j++){
          if(strcmp(str[i].lastName,str[j].lastName)>0){
             strcpy(s.lastName,str[i].lastName);
             strcpy(str[i].lastName,str[j].lastName);
             strcpy(str[j].lastName,s.lastName);
+            strcpy(s.name,str[i].name);
+            strcpy(str[i].name,str[j].name);
+            strcpy(str[j].name,s.name);
+            strcpy(s.tel,str[i].tel);
+            strcpy(str[i].tel , str[j].tel);
+            strcpy(str[j].tel , s.tel);
+            strcpy(s.date,str[i].date);
+            strcpy(str[i].date , str[j].date);
+            strcpy(str[j].date , s.date);
+            s.age = str[i].age;
+            str[i].age = str[j].age;
+            str[j].age = s.age;
+            s.age = str[i].age;
+            str[i].status = str[j].status;
+            str[j].status = s.status;
+            s.id = str[i].id;
+            str[i].id = str[j].id;
+            str[j].id = s.id;
          }
       }
    }
+    
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        for(int i = 0; i < count; i++) {
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            printf("\n-----------------------------------------------------------------------------------------------------------");
+        }
+}
+void sortbyDate(){
+
+    res str[max];
+    res s;
+    for(int i = 0;i<max;i++){
+        str[i] = _res[i];
+    }
+    bool isOlder=false;
+
+    char _day[2];
+    char _month[2];
+    char _year[4];
+    
+    char __day[2];
+    char __month[2];
+    char __year[4];
+
+    int day;
+    int month;
+    int year;
+    int day_;
+    int month_;
+    int year_;
+    for(int i=0;i<count;i++){
+      for(int j=i+1;j<count;j++){    
+                __day[0] = str[j].date[0];
+                __day[1] = str[j].date[1];
+                __month[3] = str[j].date[3];
+                __month[4] = str[j].date[4];
+                __year[6] = str[j].date[6];
+                __year[7] = str[j].date[7];
+                __year[8] = str[j].date[8];
+                __year[9] = str[j].date[9];
+
+                day_ = atoi(__day);
+                month_ = atoi(__month);
+                year_ = atoi(__year);
+
+                _day[0] = str[i].date[0];
+                _day[1] = str[i].date[1];
+                _month[3] = str[i].date[3];
+                _month[4] = str[i].date[4];
+                _year[6] = str[i].date[6];
+                _year[7] = str[i].date[7];
+                _year[8] = str[i].date[8];
+                _year[9] = str[i].date[9];
+
+                day = atoi(_day);
+                month = atoi(_month);
+                year = atoi(_year);
+
+                if((year - year_)<0){isOlder=true;}
+                else if((month - month_)<0){isOlder=true;}
+                else if((day - day_)<0){isOlder=true;}
+                else{isOlder=false;}
+                
+
+                if(isOlder){
+            strcpy(s.lastName,str[i].lastName);
+            strcpy(str[i].lastName,str[j].lastName);
+            strcpy(str[j].lastName,s.lastName);
+            strcpy(s.name,str[i].name);
+            strcpy(str[i].name,str[j].name);
+            strcpy(str[j].name,s.name);
+            strcpy(s.tel,str[i].tel);
+            strcpy(str[i].tel , str[j].tel);
+            strcpy(str[j].tel , s.tel);
+            strcpy(s.date,str[i].date);
+            strcpy(str[i].date , str[j].date);
+            strcpy(str[j].date , s.date);
+            s.age = str[i].age;
+            str[i].age = str[j].age;
+            str[j].age = s.age;
+            s.age = str[i].age;
+            str[i].status = str[j].status;
+            str[j].status = s.status;
+            s.id = str[i].id;
+            str[i].id = str[j].id;
+            str[j].id = s.id;
+         }
+      }}
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        for(int i = 0; i < count; i++) {
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            printf("\n-----------------------------------------------------------------------------------------------------------");
+        }
+}
+void sortbyNamZA(){
+    res str[max];
+    res s;
+    for(int i = 0;i<max;i++){
+        str[i] = _res[i];
+    }
+    for(int i=0;i<count;i++){
+      for(int j=i+1;j<count;j++){
+         if(strcmp(str[i].lastName,str[j].lastName)<0){
+            strcpy(s.lastName,str[i].lastName);
+            strcpy(str[i].lastName,str[j].lastName);
+            strcpy(str[j].lastName,s.lastName);
+            strcpy(s.name,str[i].name);
+            strcpy(str[i].name,str[j].name);
+            strcpy(str[j].name,s.name);
+            strcpy(s.tel,str[i].tel);
+            strcpy(str[i].tel , str[j].tel);
+            strcpy(str[j].tel , s.tel);
+            strcpy(s.date,str[i].date);
+            strcpy(str[i].date , str[j].date);
+            strcpy(str[j].date , s.date);
+            s.age = str[i].age;
+            str[i].age = str[j].age;
+            str[j].age = s.age;
+            s.age = str[i].age;
+            str[i].status = str[j].status;
+            str[j].status = s.status;
+            s.id = str[i].id;
+            str[i].id = str[j].id;
+            str[j].id = s.id;
+         }
+      }
+   }
+    
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        for(int i = 0; i < count; i++) {
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            printf("\n-----------------------------------------------------------------------------------------------------------");
+        }
+}
+
+void sortbyStatus(){
+    res str[max];
+    res s;
+    int countx = 0;
+    for(int i = 0;i<max;i++){
+        if(_res[i].status == 1){
+            strcpy(str[countx].lastName,_res[i].lastName);
+            strcpy(str[countx].name,_res[i].name);
+            strcpy(str[countx].tel,_res[i].tel);
+            strcpy(str[countx].date,_res[i].date);
+            str[countx].age = _res[i].age;
+            str[countx].status = _res[i].status;
+            str[countx].id = _res[i].id;
+            countx++;
+        }
+    }
+    for(int i = 0;i<max;i++){
+        if(_res[i].status == 2){
+            strcpy(str[countx].lastName,_res[i].lastName);
+            strcpy(str[countx].name,_res[i].name);
+            strcpy(str[countx].tel,_res[i].tel);
+            strcpy(str[countx].date,_res[i].date);
+            str[countx].age = _res[i].age;
+            str[countx].status = _res[i].status;
+            str[countx].id = _res[i].id;
+            countx++;
+        }
+    }for(int i = 0;i<max;i++){
+        if(_res[i].status == 3){
+            strcpy(str[countx].lastName,_res[i].lastName);
+            strcpy(str[countx].name,_res[i].name);
+            strcpy(str[countx].tel,_res[i].tel);
+            strcpy(str[countx].date,_res[i].date);
+            str[countx].age = _res[i].age;
+            str[countx].status = _res[i].status;
+            str[countx].id = _res[i].id;
+            countx++;
+        }
+    }for(int i = 0;i<max;i++){
+        if(_res[i].status == 4){
+            strcpy(str[countx].lastName,_res[i].lastName);
+            strcpy(str[countx].name,_res[i].name);
+            strcpy(str[countx].tel,_res[i].tel);
+            strcpy(str[countx].date,_res[i].date);
+            str[countx].age = _res[i].age;
+            str[countx].status = _res[i].status;
+            str[countx].id = _res[i].id;
+            countx++;
+        }
+    }
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+        printf("\n--------------------------------------------------------------------------------------------------------------");
+        for(int i = 0; i < count; i++) {
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", str[i].id, str[i].name, str[i].lastName, str[i].tel, str[i].age, str[i].status, str[i].date);
+            printf("\n-----------------------------------------------------------------------------------------------------------");
+        }
+
 }
 
 void sort(){
@@ -146,11 +512,155 @@ void sort(){
     printf("\n2.Display with alphabtical order Z-A");
     printf("\n3.Dislay by Date");
     printf("\n4.Display by Status");
-    scanf("%d", &choice);
+    printf("\nEnter you Choice : ");
+    while(scanf("%d",&choice)!=1){
+        printf("\ninvalid choice!!! Please Renter : ");
+        getchar();
+    }
+    switch(choice){
+        case 1:
+            sortbyNamAZ();
+            break;
+        case 2:
+            sortbyNamZA();
+            break;
+        case 3:
+            sortbyDate();
+            break;
+        case 4:
+            sortbyStatus();
+            break;
+        default:
+            printf("\nInvalid Choice!!!!!");
+            break;
+    }
 
+
+}
+
+void searchByName(){
+    char ch;
+    char phrase[max];
+    printf("\nEnter Last Name: ");
+    if (scanf("%49s", phrase) == 1) {
+        ch = getchar();
+        if (ch == ' ' || ch != '\n') {
+            printf("Error: Only one word is allowed for the last name.\n");
+            while (ch != '\n' && ch != EOF) ch = getchar();
+            return;
+        }
+    }
+    for (int i = 0; phrase[i] != '\0'; i++) {
+        if (!isalpha(phrase[i])) {
+            printf("\nError: Name can only be alphabetic characters.");
+            return;
+        }
+    }
+    for(int i = 0;i<count;i++){
+        if(strcmp(_res[i].lastName, phrase)==0){
+            printf("\n--------------------------------------------------------------------------------------------------------------");
+            printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+            printf("\n--------------------------------------------------------------------------------------------------------------");
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            printf("\n-----------------------------------------------------------------------------------------------------------");
+            
+        }
+    }
+}
+void searchByDate(){
+    char phrase[max];
+    verifyDate(phrase);
+    for(int i = 0;i<count;i++){
+        if(strcmp(_res[i].date, phrase)==0){
+            printf("\n--------------------------------------------------------------------------------------------------------------");
+            printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+            printf("\n--------------------------------------------------------------------------------------------------------------");
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            printf("\n-----------------------------------------------------------------------------------------------------------");
+            
+        }
+    }
+}
+void searchByID(){
+    char ch;
+    int yu;
+    printf("\nEnter ID refrence: ");
+    while(scanf("%d",&yu)!=1){
+        printf("\ninvalid choice!!! Please Renter : ");
+        getchar();
+    }
+    for(int i = 0;i<count;i++){
+        if(_res[i].id==yu){
+            printf("\n--------------------------------------------------------------------------------------------------------------");
+            printf("\n|  ref'ID  |    First Name    |       Last Name      |       Tel N°:      |  Age  |  Status  |      DATE     |");
+            printf("\n--------------------------------------------------------------------------------------------------------------");
+            printf("\n|%-10d|%-18s|%-22s|%-20s|%-8d|%-10d|%-15s|", _res[i].id, _res[i].name, _res[i].lastName, _res[i].tel, _res[i].age, _res[i].status, _res[i].date);
+            printf("\n-----------------------------------------------------------------------------------------------------------");
+            
+        }
+    }
+}
+void search(){
+    int choice;
+    printf("\n1.Search by Refrence ID");
+    printf("\n2.Search by Name");
+    printf("\n3.Search by Date");
+    printf("\nEnter you Choice : ");
+    while(scanf("%d",&choice)!=1){
+        printf("\ninvalid choice!!! Please Renter : ");
+        getchar();
+    }switch(choice){
+        case 1:
+            searchByID();
+            break;
+        case 2:
+            searchByName();
+            break;
+        case 3:
+            searchByDate();
+            break;
+    }
 }
 
 
 int main(){
+    
+    int choice;
+    while(choice!=7){
+    printf("\n1.Add a Reservation. ");
+    printf("\n2.Modify or Delete a reservation. ");
+    printf("\n3.Display list of reservations. ");
+    printf("\n4.Display With Sorting Format. ");
+    printf("\n5.Search for a specific Reservation.");
+    printf("\n6.Display Statistics.");
+    printf("\n7.Quit the Application.");
+    printf("\nEnter Your Choice : ");
+    while(scanf("%d",&choice)!=1){
+        printf("\ninvalid choice!!! Please Renter : ");
+        getchar();
+    }
 
+    switch(choice){
+        case 1:
+            add();
+            break;
+        case 2:
+            del();
+            break;
+        case 3:
+            display();
+            break;
+        case 4:
+            sort();
+            break;
+        case 5:
+            search();
+            break;
+        case 6:
+            break;
+
+    }
+
+    
+    }
 }
